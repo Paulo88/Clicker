@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Faz a página se ajustar à largura do dispositivo (essencial para responsividade em celular) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Título exibido na aba do navegador -->
+    <title>CLICKER no Mundo Invertido</title>
+
+    <!-- Ícone (favicon) exibido na aba do navegador -->
+    <link rel="icon" href="assets/logo/st.jpg" type="image/x-icon" />
+
+    <!-- Fonte do Google Fonts "Orbitron" (estilo futurista/tecnológico), usada provavelmente nos títulos -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+    <!-- Fonte do Google Fonts "Stint Ultra Expanded" (estilo retrô/anos 80, tema Stranger Things) -->
+    <link href="https://fonts.googleapis.com/css2?family=Stint+Ultra+Expanded&display=swap" rel="stylesheet"/>
+    <!-- Arquivo CSS próprio do projeto, com todo o estilo visual -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Biblioteca GSAP: usada no script.js para todas as animações (fade, scale, stagger, etc) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  </head>
+
+  <body>
+    <!-- ===================== -->
+    <!-- LOADING -->
+    <!-- ===================== -->
+    <!-- Primeira tela vista pelo jogador: logos, título e barra de carregamento
+         animada (controlada em script.js, bloco "LOADING CINEMÁTICO") -->
+
+    <section id="loadingScreen">
+      <div class="logos">
+        <!-- Logo do SENAC (animado deslizando para a esquerda via GSAP) -->
+        <img src="assets/logo/senac.webp" id="senacLogo" />
+
+        <!-- Logo do Stranger Things (animado deslizando para a direita via GSAP) -->
+        <img src="assets/logo/stranger_things.svg" id="strangerLogo" />
+      </div>
+
+      <h2 class="subtitle">Stranger Things</h2>
+
+      <h1 class="st-title">CLICKER</h1>
+
+      <h2 class="subtitle">No Mundo Invertido</h2>
+
+      <!-- Barra de progresso do carregamento: a div interna ".loadingFill"
+           é animada de 0% a 100% de largura em 7 segundos pelo script.js -->
+      <div class="loadingBar">
+        <div class="loadingFill"></div>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- SELEÇÃO -->
+    <!-- ===================== -->
+    <!-- Tela onde o jogador escolhe seu personagem entre os 12 disponíveis.
+         Cada ".character-card" tem um atributo "data-char" que é lido pelo
+         script.js para saber qual personagem foi clicado. -->
+    <section id="characterScreen">
+      <!-- Elemento que mostra o fundo do personagem em pré-visualização
+           quando um card é clicado (preenchido via JS: preview.style.backgroundImage) -->
+      <div id="backgroundPreview"></div>
+
+      <h1>Escolha seu Personagem</h1>
+
+      <div class="characters">
+        <!-- 12 PERSONAGENS -->
+        <!-- Cada card abaixo segue o mesmo padrão:
+             - data-char: identifica a chave usada no objeto "personagens" do script.js
+             - img: retrato do personagem exibido na tela de seleção
+             - span: nome exibido embaixo do retrato -->
+
+        <div class="character-card" data-char="eleven">
+          <img src="assets/personagem/personagem_selecao/eleven (2).png" />
+          <span>ELEVEN - 011</span>
+        </div>
+
+        <div class="character-card" data-char="joyce">
+          <img src="assets/personagem/personagem_selecao/joyce.png" />
+          <span>JOYCE BYERS</span>
+        </div>
+
+        <div class="character-card" data-char="steve">
+          <img src="assets/personagem/personagem_selecao/steve.png" />
+          <span>STEVE HARRINGTON</span>
+        </div>
+
+        <div class="character-card" data-char="max">
+          <img src="assets/personagem/personagem_selecao/max.png" />
+          <span>MAX MAYFIELD</span>
+        </div>
+
+        <div class="character-card" data-char="hopper">
+          <img src="assets/personagem/personagem_selecao/hopper.png" />
+          <span>JIM HOPPER</span>
+        </div>
+
+        <div class="character-card" data-char="mike">
+          <img src="assets/personagem/personagem_selecao/mike.png" />
+          <span>MIKE WHEELER</span>
+        </div>
+
+        <div class="character-card" data-char="lucas">
+          <img src="assets/personagem/personagem_selecao/lucas.png" />
+          <span>LUCAS SINCLAIR</span>
+        </div>
+
+        <div class="character-card" data-char="dustin">
+          <img src="assets/personagem/personagem_selecao/dustin.png" />
+          <span>DUSTIN HENDERSON</span>
+        </div>
+
+        <div class="character-card" data-char="kali">
+          <img src="assets/personagem/personagem_selecao/kali.webp" />
+          <span>KALI - 008</span>
+        </div>
+
+        <div class="character-card" data-char="will">
+          <img src="assets/personagem/personagem_selecao/will.png" />
+          <span>WILL BYERS</span>
+        </div>
+
+        <div class="character-card" data-char="nancy">
+          <img src="assets/personagem/personagem_selecao/nancy.png" />
+          <span>NANCY WHEELER</span>
+        </div>
+
+        <div class="character-card" data-char="robin">
+          <img src="assets/personagem/personagem_selecao/robin.png" />
+          <span>ROBIN BUCKLEY</span>
+        </div>
+      </div>
+
+      <!-- Botão "INICIAR": fica escondido (via CSS) até um personagem ser
+           clicado; script.js o revela com animação e, ao ser clicado, monta
+           a tela de jogo (#gameScreen) com os dados do personagem escolhido -->
+      <button id="selectBtn">INICIAR</button>
+    </section>
+
+    <!-- ===================== -->
+    <!-- JOGO - ELEVEN -->
+    <!-- ===================== -->
+    <!-- Nota de estudo: o comentário "JOGO - ELEVEN" é só um resquício de
+         quando o jogo tinha apenas a Eleven implementada. Esta seção
+         (#gameScreen) é reaproveitada para TODOS os personagens — o
+         conteúdo interno (fundo, imagem do personagem, itens da loja etc.)
+         é trocado dinamicamente pelo script.js conforme o personagem
+         escolhido, então o nome do comentário está desatualizado. -->
+
+    <section id="gameScreen">
+      <!-- Fundo -->
+      <!-- Camada de overlay (gradiente escuro) por cima do fundo do jogo,
+           dá profundidade/contraste à cena (ver #gameOverlay no CSS) -->
+      <div id="gameOverlay"></div>
+
+      <!-- Camada decorativa de "neblina" (efeito visual, estilo Upside Down) -->
+      <div id="fogLayer"></div>
+      <!-- Container onde as partículas/esporos flutuantes são criadas
+           dinamicamente pela função criarEsporo() do script.js -->
+      <div id="particlesBackground"></div>
+
+      <!-- Energia -->
+      <!-- Mostra o contador de energia atual do jogador (atualizado em cada clique) -->
+      <div id="energyContainer">
+        <h1 id="energyText">0 ENERGIA</h1>
+      </div>
+
+      <!-- Container onde os efeitos visuais de clique (o "+1" e as partículas)
+           são criados dinamicamente pelas funções criarMaisUm() e criarParticulas() -->
+      <div id="clickEffects"></div>
+
+      <!-- Menu Esquerda -->
+      <!-- Botões fixos no canto: ligar/desligar som e abrir o painel de estatísticas -->
+      <div id="leftMenu">
+        <button id="soundBtn">
+          <img id="soundIcon" src="assets/icone/som_ligado.png" alt="Som" />
+        </button>
+
+        <button id="statsBtn">
+          <img src="assets/icone/estatistica.png" alt="Estatísticas" />
+        </button>
+      </div>
+
+      <!-- Painel de estatísticas (fica escondido por padrão via classe "hidden";
+           abre/fecha com animação GSAP nos listeners de #statsBtn/#closeStats) -->
+      <div id="statsPanel" class="hidden">
+        <div class="statsHeader">
+          <h2>
+            <img src="assets/icone/estatisticas/38.png" alt="Estatísticas" class="statIconTitle"/> Estatísticas
+          </h2>
+          <button id="closeStats">✖</button>
+        </div>
+
+        <!-- Grade com os 6 números de estatística, cada "strong" é atualizado
+             pela função atualizarStats() do script.js -->
+        <div class="statsGrid">
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/energia-atual.png" alt="" class="statIcon"/> Energia Atual
+            </span>
+            <strong id="statEnergy">0</strong>
+          </div>
+
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/29.png" alt="" class="statIcon"/> Cliques Totais
+            </span>
+            <strong id="statClicks">0</strong>
+          </div>
+
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/progresso.png" alt="" class="statIcon"/> Progresso
+            </span>
+            <strong id="statProgress">0%</strong>
+          </div>
+
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/34.png" alt="energia-coletada" class="statIcon"/> Energia Coletada
+            </span>
+            <strong id="statTotalEnergy">0</strong>
+          </div>
+
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/tempo-jogado.png" alt="tempo-jogado" class="statIcon"/> Tempo Jogado
+            </span>
+            <strong id="statPlayTime">00:00</strong>
+          </div>
+
+          <div class="statCard">
+            <span>
+              <img src="assets/icone/estatisticas/35.png" alt="estatisticas" class="statIcon"/> Energia Gasta
+            </span>
+            <strong id="statSpentEnergy">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel do inventário: o conteúdo de #inventoryList é totalmente
+           reescrito (innerHTML) pela função atualizarInventario() do script.js
+           sempre que o jogador compra algo -->
+      <div id="inventoryPanel">
+        <h2>Seus itens:</h2>
+
+        <div id="inventoryList"></div>
+      </div>
+
+      <!-- Centro -->
+      <!-- Objeto clicável central (o "cookie" do clicker game). A imagem (src)
+           é trocada pelo script.js conforme o "itemCentral" do personagem escolhido -->
+      <div id="centerGame">
+        <img src="assets/item/item_central/waffle.png" id="clickObject" alt="Waffle"/>
+      </div>
+
+      <!-- Personagem -->
+      <!-- Sprite do personagem exibido na tela de jogo. A src é trocada pelo
+           script.js conforme o campo "personagem" do personagem escolhido -->
+      <div id="characterArea">
+        <img src="assets/personagem/personagem_jogo/eleven.png" id="characterImage"/>
+      </div>
+
+      <!-- Timer -->
+      <!-- Cronômetro regressivo (tempo limite para vencer). O texto e as
+           cores/animações de alerta são controlados por atualizarTimer()
+           no script.js. O valor inicial "03:19" aqui é só um placeholder
+           visual — o valor real vem de "tempoLimite" no JS. -->
+      <div id="timerPanel">
+        <span>⏳ TEMPO RESTANTE</span>
+
+        <strong id="timerText">03:19</strong>
+      </div>
+
+      <!-- Barra de progresso -->
+      <!-- Mostra visualmente o quanto falta para atingir a energia necessária
+           para vencer. #progressFill tem sua largura (%) atualizada por
+           atualizarBarra() no script.js -->
+      <div id="progressArea">
+        <div id="progressBar">
+          <div id="progressFill"></div>
+        </div>
+
+        <h2>ENERGIA PARA SAIR DO MUNDO INVERTIDO</h2>
+      </div>
+
+      <!-- SHOP -->
+      <!-- Botão que abre o painel da loja (evento registrado em script.js: #shopBtn) -->
+      <button id="shopBtn">Loja</button>
+
+      <!-- Painel da loja (escondido por padrão via classe "hidden").
+           O <h2> do título e os 4 itens abaixo são todos preenchidos
+           dinamicamente pelo script.js (dados.tituloLoja, dados.loja,
+           dados.itensLoja) conforme o personagem escolhido — o texto
+           "LOJA DA ELEVEN" e os nomes/preços abaixo são apenas os
+           valores padrão exibidos antes do JS rodar. -->
+      <div id="shopPanel" class="hidden">
+        <h2>LOJA DA ELEVEN</h2>
+
+        <!-- ITEM 1 -->
+        <!-- Cada botão de item da loja tem:
+             - onclick: chama a função de compra correspondente (definida em
+               window.comprarX no script.js) — por isso essas 4 funções
+               precisam sempre existir com esses nomes exatos
+             - img.shopIcon: ícone do item (src trocado por dados.loja[indice])
+             - h3.shopNome / span.shopDesc: nome e descrição (trocados por
+               dados.itensLoja[indice].nome / .desc)
+             - span.shopPreco: preço (trocado por dados.itensLoja[indice].preco)
+             Nota: o texto "WAFFLE EXTRA teste" abaixo é só o valor inicial no
+             HTML — assim que um personagem é escolhido, o JS sobrescreve com
+             o nome real do item daquele personagem. -->
+        <button class="shopItem" onclick="comprarWaffle()">
+         <img src="assets/item/item_loja/eleven/1.png" class="shopIcon" />
+           <div class="shopInfo">
+             <h3 class="shopNome">WAFFLE EXTRA teste</h3>
+             <span class="shopDesc">+1 por clique</span>
+            </div>
+
+            <div class="shopPrice">⚡<span class="shopPreco">10</span></div>
+        </button>
+
+        <!-- ITEM 2 -->
+        <button class="shopItem" onclick="comprarPoder()">
+          <img src="assets/item/item_loja/eleven/2.png" class="shopIcon" />
+
+          <div class="shopInfo">
+            <h3 class="shopNome">PODER TELECINÉTICO</h3>
+            <span class="shopDesc">+8 por clique</span>
+          </div>
+
+           <div class="shopPrice">⚡<span class="shopPreco">50</span></div>
+        </button>
+
+        <!-- ITEM 3 -->
+        <button class="shopItem" onclick="comprarBateria()">
+          <img src="assets/item/item_loja/eleven/3.png" class="shopIcon" />
+
+          <div class="shopInfo">
+            <h3 class="shopNome">GERADOR</h3>
+            <span class="shopDesc">+5 por segundo</span>
+          </div>
+
+          <div class="shopPrice">⚡<span class="shopPreco">100</span></div>
+        </button>
+
+        <!-- ITEM 4 -->
+        <button class="shopItem" onclick="comprarFocoMental()">
+          <img src="assets/item/item_loja/eleven/4.png" class="shopIcon" />
+
+          <div class="shopInfo">
+            <h3 class="shopNome">FOCO MENTAL</h3>
+            <span class="shopDesc">+32 por clique</span>
+          </div>
+
+          <div class="shopPrice">⚡<span class="shopPreco">100</span>
+          </div>
+        </button>
+
+        <!-- Fecha o painel da loja (evento registrado em script.js: #closeShop) -->
+        <button id="closeShop">FECHAR LOJA ✖</button>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- TELA DE VITÓRIA -->
+    <!-- ===================== -->
+    <!-- Exibida quando o jogador atinge a energia necessária antes do tempo
+         acabar. Toda a sequência de animação (imagem, título, subtítulo,
+         estatísticas, botão) é controlada por mostrarTelaVitoria() no script.js. -->
+    <section id="victoryScreen">
+      <!-- src vazio de propósito: é preenchido pelo JS com a imagem de vitória
+           correta (menino ou menina) de acordo com o personagem escolhido -->
+      <img id="victoryImage" src="" />
+
+      <h1 id="victoryTitle">MISSÃO CONCLUÍDA</h1>
+
+      <p id="victorySubtitle"> Você conseguiu escapar do Mundo Invertido. 
+        <br /> Nos vemos na próxima aventura!
+      </p>
+
+      <!-- Card com o resumo/estatísticas finais da partida -->
+      <div id="victoryStats">
+        <h2>RELATÓRIO DA MISSÃO</h2>
+
+        <div class="victoryLine"></div>
+
+        <!-- Cada ".victoryItem" abaixo é uma linha de estatística; os valores
+             de "strong" são preenchidos pelo script.js ao final do jogo -->
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/tempo-jogado.png" alt="Tempo" /> Tempo de fuga</span>
+          <strong id="victoryTime"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/clicks.png" alt="Cliques" /> Cliques realizados</span>
+          <strong id="victoryClicks"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/energia-atual.png" alt="Energia" /> Energia coletada</span>
+          <strong id="victoryEnergy"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/loja.png" alt="Loja" /> Energia gasta</span>
+          <strong id="victorySpent"></strong>
+        </div>
+
+        <div class="victoryLine"></div>
+
+        <!-- Botão que reinicia o jogo (recarrega a página) via reiniciarJogo() -->
+        <button id="restartBtn">JOGAR NOVAMENTE</button>
+      </div>
+    </section>
+
+    <!-- ===================== -->
+    <!-- TELA DE DERROTA -->
+    <!-- ===================== -->
+    <!-- Exibida quando o tempo limite acaba antes do jogador atingir a
+         energia necessária. Estrutura praticamente idêntica à tela de
+         vitória, controlada por mostrarTelaDerrota() no script.js. -->
+    <section id="defeatScreen">
+      <!-- Diferente da vitória, aqui a imagem já vem fixa no HTML (não muda
+           por personagem) -->
+      <img id="defeatImage" src="assets/fundo/fundo_final/Mindflayer.avif" />
+
+      <h1 id="defeatTitle">MISSÃO FRACASSADA</h1>
+
+      <p id="defeatSubtitle">Você foi capturado pelo Devorador de Mentes.</p>
+
+      <div id="defeatStats">
+        <h2>RELATÓRIO DA MISSÃO</h2>
+
+        <div class="victoryLine"></div>
+
+        <!-- Mesma estrutura de estatísticas da tela de vitória, mas com ids
+             "defeatX" — reaproveita inclusive a classe ".victoryItem" -->
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/tempo-jogado.png" alt="Tempo" /> Tempo de fuga</span>
+          <strong id="defeatTime"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/clicks.png" alt="Cliques" /> Cliques realizados</span>
+          <strong id="defeatClicks"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/energia-atual.png" alt="Energia" /> Energia coletada</span>
+          <strong id="defeatEnergy"></strong>
+        </div>
+
+        <div class="victoryItem">
+          <span><img src="assets/icone/finais/loja.png" alt="Loja" /> Energia gasta</span>
+          <strong id="defeatSpent"></strong>
+        </div>
+
+        <div class="victoryLine"></div>
+
+        <!-- Reutiliza a mesma função reiniciarJogo() da tela de vitória -->
+        <button id="restartDefeatBtn">JOGAR NOVAMENTE</button>
+      </div>
+    </section>
+
+    <!-- Elemento de áudio de fundo. "loop" faz a música reiniciar
+         automaticamente ao terminar. A "src" inicial (Kids.mp3) é trocada
+         pelo script.js assim que um personagem é escolhido (dados.musica) -->
+    <audio id="bgMusic" src="assets/som/Kids.mp3" loop></audio>
+
+    <!-- Carrega toda a lógica do jogo (deve vir depois do HTML e do GSAP,
+         pois usa document.getElementById em elementos definidos acima) -->
+    <script src="script.js"></script>
+  </body>
+</html>
